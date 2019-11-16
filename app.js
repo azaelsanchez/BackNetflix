@@ -30,7 +30,7 @@ mongoose.connect("/mongodb://localhost:27017/NeflixOld",
 .catch(error => console.log('Error al conectar a MongoDB ' + error));
 
  
-// Routers
+// Buscamos peliculas.
 app.get('/movie',(req,res) =>{
     MovieModel.find({})
         .then(movieFind => res.send(movieFind))
@@ -69,6 +69,31 @@ app.get("/movie/:title",(req, res)=>{
     }
     res.send(movie)
     })
+})
+
+//Modo usuarios
+app.get('/user', (req, res) => {
+    UserModel.find({})
+        .then(users => res.send(users))
+        .catch(error => console.log(error))
+})
+app.post('/user/register', async (req, res) => {
+    try {
+        const user = await new UserModel({
+            username: req.body.username,
+            password: req.body.password
+        }).save()
+        res.send(user)
+    } catch (error) {
+        console.log(error);
+    }
+})
+app.patch('/user/:id', (req, res) => {
+    UserModel.findByIdAndUpdate(req.params.id, {
+        username: req.body.username
+    },{new:true,useFindAndModify:false})
+    .then(user=>res.send(user))
+    .catch(error=>console.log(error))
 })
 
 app.listen(3002, () =>console.log ("Server Funcionando en el puerto 3002")); // El 3000 me sale en uso y no se por que.
