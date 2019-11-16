@@ -43,17 +43,34 @@ app.get("/movie/:id",(req,res)=>{
     MovieModel.findById(id,(err,movie)=>{
         if(err){
             console.log("hay un error")
-            return res.status(500).send({mesaje: err})
+            return res.status(500).send({message: err})
         }
         if(!id){
             console.log("Nada encontrado")
-            return res.status(500).send({mesaje:"Pelicula no encontrada"})
+            return res.status(500).send({message:"Pelicula no encontrada"})
         }
         console.log("la pelicula es" + movie)
         res.send(movie)
     })
 })
 
-app.listen(3002, () =>console.log ("Server Funcionando en el puerto 3002"));
+app.get("/movie/:title",(req, res)=>{
+
+    let titleName= new RegExp(req.params.title, "i");
+
+    MovieModel.find({title:titleName},(err,movie)=>{
+    if(err){
+        console.log("ha habido un error "+err)
+        return res.status(500).send({mesaje: err})
+    }
+    if(!titleName){
+        console.log("Pelicula no encontrada")
+        return res.status(500).send({mesaje: "movie doesn't exist"})
+    }
+    res.send(movie)
+    })
+})
+
+app.listen(3002, () =>console.log ("Server Funcionando en el puerto 3002")); // El 3000 me sale en uso y no se por que.
 
 module.exports = app;
