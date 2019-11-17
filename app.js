@@ -1,9 +1,10 @@
 
 const express = require('express');
-// const path = require('path');
+//const path = require('path');
 // const cookieParser = require('cookie-parser');
 // const logger = require('morgan');
 const mongoose = require('mongoose');
+const TokenModel = require('./models/token');
 const MovieModel = require('./models/Movie');
 const GenreModel = require('./models/Genre');
 const UserModel = require('./models/User');
@@ -29,6 +30,7 @@ mongoose.connect("/mongodb://localhost:27017/NeflixOld",
         useCreateIndex:true
     })
 .then(() => console.log('conectado a mongodb'))
+
 .catch(error => console.log('Error al conectar a MongoDB ' + error));
 
  
@@ -73,76 +75,89 @@ app.get("/movie/:title",(req, res)=>{
     })
 })
 
-//Buscamos por genero
+//Buscamos peliculas por genero en este Endpoint por genero
 app.get("/movie/genre/:genre", (req, res) => {
-
+ 
     genre = new RegExp(req.params.genre, "i")
-    genreId = ""
 
     GenreModel.find({
         name: genre
-    }, (err, docs) => {
+    }, (err, movie) => {
         if (err) {
-            console.log("ha habido un error " + err)
-            return res.status(500).send({
-                mesaje: err
-            })
+            
+            return res.send("Error al guardar los datos: "+err)
         }
         if (!genre) {
-            console.log("no lo encuentra")
-            return res.status(500).send({
-                mesaje: "genre doesn't exist"
-            })
+            
+            return res.send("Genero introducido no valido.")
 
         }
-
-        let movieGenre = docs
-        console.log(movieGenre)
-        for (let i = 0; i < movieGenre.length; i++) {
-            console.log(movieGenre[i].id)
-
-            if (movieGenre[i].name == genre) {
-
-                genreId = movieGenre[i].id
-                console.log(genreId)
-            }
-        }
-
+        
+        movieGenre = movie
+        movieGenreId=parseInt(movieGenre[0].id)
+        
         MovieModel.find({
-            genre_ids: 28
+            genre_ids: movieGenreId
         }, (err, movie) => {
+            if(err){
+                return res.send("Error en la busqueda: "+ err)
+            }
+            if(!movieGenreId){
+               
+                
+                return res.send("No existe ese genero")
+            }
             res.send(movie)
         })
 
     })
 })
 
+//Endpoint de registro de usuarios
+app.post('/user/register',(req,res) =>{
+  
+    let nuevoUser = new UserModel()
+            nuevoUser.username = req.body.username,
+            nuevoUser.password = req.body.password
+        
+            nuevoUser.save((err,userGuardado)=>{
+            if(err){
 
-//Modo usuarios
-app.get('/user', (req, res) => {
-    UserModel.find({})
-        .then(users => res.send(users))
-        .catch(error => console.log(error))
-})
-app.post('/user/register', async (req, res) => {
-    try {
-        const user = await new UserModel({
-            username: req.body.username,
-            password: req.body.password
-        }).save()
-        res.send(user)
-    } catch (error) {
-        console.log(error);
-    }
-})
-app.patch('/user/:id', (req, res) => {
-    UserModel.findByIdAndUpdate(req.params.id, {
-        username: req.body.username
-    },{new:true,useFindAndModify:false})
-    .then(user=>res.send(user))
-    .catch(error=>console.log(error))
+                return res.send("Ha habido un error al guardar los datos: "+err)
+            }
+            res.send(userGuardado +" guardado con exito")
+
+        })
+        
+    })
+
+//Endpoint de login para el usuario y si es correcto se genera un Token
+app.post('/user/login', (req, res)=>{
+    user = req.body.username;
+    passwordValid = req.body.password;
+    
+    UserModel.find({username: user}, (err, userValido)=>{
+        if (err){
+            return res.send("Error. "+err)
+        }
+        if(!userValido.length){
+            return res.send("usuario no encontrado")
+        }
+        if(userValido[0].password !==passwordValid){
+            return res.send("contraseña incorrecta")
+        }
+        
+        token = new TokenModel()
+        token.userId = userValido[0]._id;
+        token.save()
+        res.send("login correcto")
+        
+    })
+    
 })
 
-app.listen(3002, () =>console.log ("Server Funcionando en el puerto 3002")); // El 3000 me sale en uso y no se por que.
+    
+
+app.listen(3005, () =>console.log ("Server Funcionando en el puerto 3005")); // El 3000 me sale en uso y no se por que.
 
 module.exports = app;
