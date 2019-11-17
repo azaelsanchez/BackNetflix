@@ -1,5 +1,6 @@
 
 const express = require('express');
+const bodyParser = require ('body-parser');
 //const path = require('path');
 // const cookieParser = require('cookie-parser');
 // const logger = require('morgan');
@@ -9,15 +10,18 @@ const MovieModel = require('./models/Movie');
 const GenreModel = require('./models/Genre');
 const UserModel = require('./models/User');
 
+const app = express();
+
 // const indexRouter = require('./routes/index');
 // const usersRouter = require('./routes/users');
 
-const app = express();
+//Midlewares
 
 // app.use(logger('dev'));
  app.use(express.json());
-// app.use(express.urlencoded({ extended: false }));
-// app.use(cookieParser());
+ app.use(bodyParser.urlencoded({ extended: false }));
+ app.use(bodyParser.json());
+ // app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use('/movie', indexRouter);
@@ -58,6 +62,50 @@ app.get("/movie/:id",(req,res)=>{
     })
 })
 
+//Endpoint de registro de usuarios
+app.post('/user/register',(req,res) =>{
+  
+    let nuevoUser = new UserModel()
+            nuevoUser.username = req.body.username,
+            nuevoUser.password = req.body.password
+        
+            nuevoUser.save((err,userGuardado)=>{
+            if(err){
+
+                return res.send("Ha habido un error al guardar los datos: "+err)
+            }
+            res.send(userGuardado +" guardado con exito")
+
+        })
+        
+    })
+
+//Endpoint de login para el usuario y si es correcto se genera un Token
+app.post('/user/login', (req, res)=>{
+    user = req.body.username;
+    passwordValid = req.body.password;
+    
+    UserModel.find({username: user}, (err, userValido)=>{
+        if (err){
+            return res.send("Error. "+err)
+        }
+        if(!userValido.length){
+            return res.send("usuario no encontrado")
+        }
+        if(userValido[0].password !==passwordValid){
+            return res.send("contraseña incorrecta")
+        }
+        
+        token = new TokenModel()
+        token.userId = userValido[0]._id;
+        token.save()
+        res.send("login correcto")
+        
+    })
+    
+})
+
+//Buscamos peliculas segun el titulo
 app.get("/movie/:title",(req, res)=>{
 
     let titleName= new RegExp(req.params.title, "i");
@@ -113,50 +161,6 @@ app.get("/movie/genre/:genre", (req, res) => {
     })
 })
 
-//Endpoint de registro de usuarios
-app.post('/user/register',(req,res) =>{
-  
-    let nuevoUser = new UserModel()
-            nuevoUser.username = req.body.username,
-            nuevoUser.password = req.body.password
-        
-            nuevoUser.save((err,userGuardado)=>{
-            if(err){
-
-                return res.send("Ha habido un error al guardar los datos: "+err)
-            }
-            res.send(userGuardado +" guardado con exito")
-
-        })
-        
-    })
-
-//Endpoint de login para el usuario y si es correcto se genera un Token
-app.post('/user/login', (req, res)=>{
-    user = req.body.username;
-    passwordValid = req.body.password;
-    
-    UserModel.find({username: user}, (err, userValido)=>{
-        if (err){
-            return res.send("Error. "+err)
-        }
-        if(!userValido.length){
-            return res.send("usuario no encontrado")
-        }
-        if(userValido[0].password !==passwordValid){
-            return res.send("contraseña incorrecta")
-        }
-        
-        token = new TokenModel()
-        token.userId = userValido[0]._id;
-        token.save()
-        res.send("login correcto")
-        
-    })
-    
-})
-
-    
 
 app.listen(3005, () =>console.log ("Server Funcionando en el puerto 3005")); // El 3000 me sale en uso y no se por que.
 
