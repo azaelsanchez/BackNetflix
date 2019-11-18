@@ -106,7 +106,7 @@ app.post('/user/login', (req, res)=>{
 })
 
 //Buscamos peliculas segun el titulo
-app.get("/movie/:title",(req, res)=>{
+app.get("/movie/title/:title",(req, res)=>{
 
     let titleName= new RegExp(req.params.title, "i");
 
