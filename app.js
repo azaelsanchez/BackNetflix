@@ -67,7 +67,11 @@ app.post('/user/register',(req,res) =>{
   
     let nuevoUser = new UserModel()
             nuevoUser.username = req.body.username,
-            nuevoUser.password = req.body.password
+            nuevoUser.password = req.body.password,
+            nuevoUser.rentMovie = req.body.rentMovie,
+            nuevoUser.rentDate = req.body.rentDate,
+            nuevoUser.rentdelivery = req.body.rentdelivery,
+            nuevoUser.login = false
         
             nuevoUser.save((err,userGuardado)=>{
             if(err){
