@@ -1,33 +1,32 @@
 const mongoose=require('mongoose');
 
-objectId=mongoose.Schema.ObjectId
-const UserSchema=mongoose.Schema({
+ObjectId=mongoose.Schema.ObjectId
 
+const UserSchema=mongoose.Schema({
     
     token: objectId,
 
     username:{
         type: String,
         unique: true,
-        require: true
+        required: true
     },
 
     password:{
         type: String,
         require: true
     },
-    rentMovie:{
-        type:String,
-        require:false
-    },
-    rentDate:{
-        type:String,
-        require:false
-    },
-    rentdelivery:{
-        type:String,
-        require:false 
-    }
+
+    login: Boolean,
+
+    filmId: ObjectId,
+
+    rentMovie: String,
+
+    rentDate: String,
+
+    rentdelivery: String
+
 })
 
 const UserModel = mongoose.model('user', UserSchema);

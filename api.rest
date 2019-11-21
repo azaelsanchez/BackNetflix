@@ -1,2 +1,45 @@
 ###
-http://localhost:3005/movie/id/5dcc3481ed02866326e6c6dd
+http://localhost:3005/movie/5dcc3481ed02866326e6c6dd
+
+#######
+
+PATCH http://localhost:3005/user/login
+Content-Type: application/json
+
+{
+    "username": "david",
+    "password":"123"
+}
+
+
+#########
+PATCH http://localhost:3005/user/logout
+Content-Type: application/json
+
+{
+    "username": "david",
+    "password":"123"
+}
+
+
+######################
+
+post http://localhost:3005/user/profile/order
+authorization: 5dd6bac2b7f4141468b62cb2
+Content-Type: application/json
+
+{
+    "title": "Avengers"
+}
+
+
+############Registro de Usuarios
+
+POST http://localhost:3005/user/register
+Content-Type: application/json
+
+{
+    "username": "david",
+    "password":"123"
+}
+
