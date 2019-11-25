@@ -11,7 +11,7 @@ PATCH http://localhost:3005/user/login
 Content-Type: application/json
 
 {
-    "username": "nombredeusuario",
+    "username": "nombre de usuario",
     "password":"contraseña"
 }
 
@@ -21,14 +21,14 @@ PATCH http://localhost:3005/user/logout
 Content-Type: application/json
 
 {
-    "username": "nombredeusuario",
+    "username": "nombre de usuario",
     "password":"contraseña"
 }
 
 ######### Alquiler de peliculas segun el usuario.
 
 post http://localhost:3005/user/profile/order
-authorization: 5ddbc665585d3309484cc63e
+authorization: Token generado
 Content-Type: application/json
 
 {
@@ -42,6 +42,6 @@ POST http://localhost:3005/user/register
 Content-Type: application/json
 
 {
-    "username": "nombredeusuario",
+    "username": "nombre de usuario",
     "password":"contraseña"
 }
