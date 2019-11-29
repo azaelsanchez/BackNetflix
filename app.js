@@ -9,7 +9,15 @@ const ObjectId = require('mongodb').ObjectID;
 
 
 
+
 const app = express();
+
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", "GET, POST,PUT,DELETE");
+    next();
+});
 
 
 app.use(express.json());
@@ -58,6 +66,7 @@ app.post('/user/register',(req,res) =>{
     let nuevoUser = new UserModel()
             nuevoUser.username = req.body.username,
             nuevoUser.password = req.body.password,
+            nuevoUser.email = req.body.email,
             nuevoUser.rentMovie = "",
             nuevoUser.rentDate = null,
             nuevoUser.rentdelivery = null,
@@ -279,6 +288,6 @@ app.patch('/user/logout', (req, res) => {
 
 })
 
-app.listen(3005, () =>console.log ("Server Funcionando en el puerto 3005")); // El 3000 me sale en uso y no se por que.
+app.listen(3002, () =>console.log ("Server Funcionando en el puerto 3002")); // El 3000 me sale en uso y no se por que.
 
 module.exports = app;

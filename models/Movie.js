@@ -6,7 +6,7 @@ const MovieSchema = mongoose.Schema({
     vote_count: Number,
     video: Boolean,
     poster_path: {
-        type: Number,
+        type: String,
         required: true
     },
 

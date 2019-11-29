@@ -1,18 +1,18 @@
-###
-http://localhost:3005/movie/5dcc3481ed02866326e6c6dd
+######### Buscar pelicula por el _id
+http://localhost:3000/movie/genre/terror
 
-#######
+######### Login del usuario creado
 
-PATCH http://localhost:3005/user/login
+PATCH http://localhost:3000/user/login
 Content-Type: application/json
 
 {
-    "username": "david",
+    "username": "azael",
     "password":"123"
 }
 
 
-#########
+######### Logout del usuario
 PATCH http://localhost:3005/user/logout
 Content-Type: application/json
 
@@ -22,24 +22,25 @@ Content-Type: application/json
 }
 
 
-######################
+######### Alquiler de peliculas segun el usuario.
 
 post http://localhost:3005/user/profile/order
-authorization: 5dd6bac2b7f4141468b62cb2
+authorization: 5ddbc665585d3309484cc63e
 Content-Type: application/json
 
 {
-    "title": "Avengers"
+    "title": "Joker"
 }
 
 
-############Registro de Usuarios
+######### Registro de Usuarios
 
-POST http://localhost:3005/user/register
+POST http://localhost:3002/user/register
 Content-Type: application/json
 
 {
-    "username": "david",
-    "password":"123"
+    "username": "paco",
+    "password":"123456",
+    "email": "paco@gmail.com"
 }
 
