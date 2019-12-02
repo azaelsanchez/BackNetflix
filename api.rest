@@ -1,23 +1,23 @@
 ######### Buscar pelicula por el _id
-http://localhost:3000/movie/genre/terror
+http://localhost:3000/movie/title/joker
 
 ######### Login del usuario creado
 
-PATCH http://localhost:3000/user/login
+POST  http://localhost:3000/user/login
 Content-Type: application/json
 
 {
-    "username": "azael",
-    "password":"123"
+    "username": "paco",
+    "password":"123456"
 }
 
 
 ######### Logout del usuario
-PATCH http://localhost:3005/user/logout
+PATCH http://localhost:3002/user/logout
 Content-Type: application/json
 
 {
-    "username": "david",
+    "username": "azael",
     "password":"123"
 }
 
@@ -39,8 +39,8 @@ POST http://localhost:3002/user/register
 Content-Type: application/json
 
 {
-    "username": "paco",
-    "password":"123456",
-    "email": "paco@gmail.com"
+    "username": "alex",
+    "password":"123",
+    "email": "alex@gmail.com"
 }
 

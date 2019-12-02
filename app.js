@@ -77,14 +77,14 @@ app.post('/user/register',(req,res) =>{
 
                 return res.send("Upss ocurrio un error al guardar los datos: "+err)
             }
-            res.send(userGuardado +" guardado con exito")
+            res.send({message:userGuardado +" guardado con exito"})
 
         })
         
     })
 
 //Endpoint de login para el usuario y si es correcto se genera un Token
-app.patch('/user/login', (req, res) => {
+app.post('/user/login', (req, res) => {
     const userExist = req.body.username;
     const passwordIsValid = req.body.password;
 
@@ -114,7 +114,7 @@ app.patch('/user/login', (req, res) => {
         validUser[0].login = true
         validUser[0].save()
         respuestaToken = validUser[0].token.toString()
-        res.send("Login de " + validUser[0].username + " realizado con exito. TOKEN: " + respuestaToken)
+        res.send({message:"Login de " + validUser[0].username + " realizado con exito. TOKEN: " + respuestaToken})
 
     })
 
